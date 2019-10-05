@@ -39,3 +39,6 @@ show backup fsm status <hostname>
          Progress (%): 100
          Current Task:
 ```
+
+## Caveat
+Do not forget to modify the fields in the '<>' the **ucsbackup.exp file 
