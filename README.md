@@ -1,14 +1,15 @@
 # Cisco UCS Backup Automation
-This automation script is written with expect. It deletes the previous backup schedule, creates a new one and execute it immediately. Once it is
+This automation script is written with expect. It deletes the previous backup schedule, creates a new one and executes it immediately. Once it is
 triggered script also checks the status of the backup. I am not sure if output varies on version of UCS. You can see the sample output of UCS Manager once backup started. 
 
-If backup failed you can get the details. If everything is Okay. You get Backup Success message with the Progress 100%
+If backup failed you can get all the details. If everything is Okay. You get 'Backup Success' message with Progress (%): 100
 
 ```bash
 show backup fsm status <hostname>
 ```
 ## On Error
-# Hostname: xxxxx
+
+ Hostname: xxxxx
 
      FSM 1:
          Remote Result: End Point Failed
