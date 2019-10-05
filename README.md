@@ -41,4 +41,4 @@ show backup fsm status <hostname>
 ```
 
 ## Caveat
-Do not forget to modify the fields '<>' the ** ucsbackup.exp file with your environment.
+Do not forget to modify the fields '<>' the **ucsbackup.exp** file with your environment.
