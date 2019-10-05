@@ -1,0 +1,75 @@
+#!/usr/bin/expect -f
+####################################################################################################
+set ucsAddr "<ucs cluster address>"
+set user "<user >" #it has to be admin role
+set passwd "<password>"
+set date [exec date +%Y%m%d]
+set sftp_addr "<sftserveraddrees>" #sftp server address
+set sftp_user "<sftpuser>"
+set sftp_password "<sftp password>"
+set sftp_dest "<destination address + filename.bin>" #it has to be .bin suffix
+set timeout 30 #timeout
+set retCode 0
+set try 1
+#############################################################
+spawn ssh -oStrictHostKeyChecking=no -l $user $ucsAddr
+expect "Password:"
+send "$passwd\r"
+expect "#"
+send   "scope system\r"
+expect "/system #"
+#Delete existing backup schedule first..
+send "delete backup $sftp_addr\r"
+expect "/system* #"
+send "commit-buffer\r"
+expect "/system #"
+send "exit\r"
+expect "#"
+##############################################################################
+#Creates a new backup schedule and executes it.
+send "scope system\r"
+expect "/system #"
+send "create backup sftp://$sftp_user@$sftp_addr$sftp_dest full-state enabled\r"
+expect "Password:"
+send "$sftp_password\r"
+expect "/system/backup* #"
+send "commit-buffer\r"
+expect "/system/backup #"
+send "exit\r"
+expect "/system #"
+###############################################################################
+###############################################################################
+#It runs 'show backup fsm status <hostname> couple of times to check if backup has been completed.
+while { $try < 6 } {
+    send "show backup fsm status $sftp_addr\r"
+    expect "/system #"
+    set buff $expect_out(buffer)
+    if {[string match "*Progress (%): 100*" $buff]} {
+        set retCode 0
+        break
+        
+    } elseif {[string match "*Progress (%): 0*" $buff]} {
+        set retCode 1
+   
+    } else {
+        set retCode 2
+        break
+    }
+      set try [expr {$try + 1}]
+      exec sleep $timeout
+    }
+#################################################################################
+send "exit\r"
+expect "#"
+send "exit\r"
+puts "retCode: $retCode"
+
+if {$retCode == 0} {
+    puts "\[INFO\] UCS Backup Completed Successfully..."
+} elseif {$retCode == 1}  {
+    puts "\[ERROR\] UCS Backup Error! Check logs."
+} else {
+    puts "\[ERROR\] UCS Backup Unknown Error! Check logs."
+}
+expect  eof
+exit $retCode
