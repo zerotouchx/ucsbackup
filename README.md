@@ -9,6 +9,7 @@ show backup fsm status <hostname>
 ```
 ## On Error
 
+```bash
  Hostname: xxxxx
 
      FSM 1:
@@ -22,9 +23,9 @@ show backup fsm status <hostname>
          Progress (%): 0
          Current Task: internal system backup(FSM-STAGE:sam:dme:MgmtBackupBackup:upload)
 
-
+```
 ## On Success 
-
+```bash
  Hostname: xxxxxxx
 
      FSM 1:
@@ -37,3 +38,4 @@ show backup fsm status <hostname>
          Try: 0
          Progress (%): 100
          Current Task:
+```
